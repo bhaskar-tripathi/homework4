@@ -14,7 +14,7 @@
 <body>
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light ">
-            <a class="navbar-brand mr-auto" href="#">View Highscores</a>
+            <a class="navbar-brand mr-auto" href="#" id="scoreBoard">View Highscores</a>
             <span class="navbar-text">
                 Time: <span id="clock"> 0 </span>
             </span>
@@ -27,13 +27,38 @@
                     <div class="row">
                         <div class="h2 mx-auto my-3 font-weight-bolder" id="title"> Coding Quiz Challenge </div>
                     </div>
+                    <div class="row finalScore d-none">
+                        <div class="h5 w-100 " id="">Your final score is: <span id="score"></span>.</div>
+                        <div class="h5 w-100 " id="saveScore">
+
+                        </div>
+                        <form>
+                            <div class="form-row ">
+                                <div class="col-auto"><label for="playerInitials" class=" col-form-label">Your
+                                        Initials</label></div>
+
+                                <div class=" col-auto ">
+                                    <input type="text" class="form-control" id="playerInitials">
+
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
                     <div class="row ">
                         <div class="text-center h5 w-100" id="instruction"><span id="questionContent"></span> </div>
                     </div>
+
                     <div class="row">
                         <button type="button " class="btn btn-primary btn-lg my-4 mx-auto" id="startQuiz">Start
                             Quiz</button>
                     </div>
+                    <div class="row">
+                            <div id="highScoreList"></div>
+                        </div>
                     <div class="row" id="messageBox">
                         <hr>
                         <div class="font-italic h4" id="message"></div>

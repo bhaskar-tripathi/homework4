@@ -7,8 +7,16 @@ document.addEventListener("DOMContentLoaded", function () {
     var clock = document.querySelector("#clock");
     var messageBox = document.querySelector("#messageBox");
     var message = document.querySelector("#message");
+    var finalScore = document.querySelector(".finalScore");
+    var score = document.querySelector("#score");
+    var submitButton = document.querySelector("#submitButton");
+    var highScoreList = document.querySelector("#highScoreList");
+    var playerInitials = document.querySelector("#playerInitials");
+    var scoreBoard = document.querySelector("#scoreBoard");
     var timer;
     var timeLeft = 0;
+    var currentScore = 0;
+    const highScores = "highScores";    // local storage variable
 
 
     var questions = [
@@ -22,12 +30,16 @@ document.addEventListener("DOMContentLoaded", function () {
             choices: ["quotes", "curly brackets", "parentheses", "square brackets"],
             answer: "parentheses"
         },
-        {
-            title: "The condition in an if / else statement is enclosed within ____. , The condition in an if / else statement is enclosed within ____., The condition in an if / else statement is enclosed within ____.",
-            choices: ["quotes", "curly brackets", "parentheses", "square brackets"],
-            answer: "parentheses"
-        },
+        // {
+        //     title: "The condition in an if / else statement is enclosed within ____. , The condition in an if / else statement is enclosed within ____., The condition in an if / else statement is enclosed within ____.",
+        //     choices: ["quotes", "curly brackets", "parentheses", "square brackets"],
+        //     answer: "parentheses"
+        // },
     ];
+
+    var highScoreBoard;
+    highScoreBoard = JSON.parse(localStorage.getItem(highScores));
+    if(highScoreBoard === null){highScoreBoard = []};
 
 
     var insText = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!"
@@ -117,6 +129,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 else {
                     // otherwise, display fail message
                     messageText = "Wrong!";
+                    // Decrement time - penalty for wrong answer
+
+                    timeLeft = timeLeft - 15;
+                    if(timeLeft < 0 ){ timeLeft = 0};
                 }
 
                 // display the message box
@@ -128,13 +144,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     // after specified seconds, hide the message box
                     messageBox.classList.add("d-none");
                     messageBox.classList.remove("d-block");
-                }, 2000);
+                }, 1500);
 
                 if (questions[index+1] !== undefined) {
                     showQuestion(index+1);
                 }
                 else {
-                    showScore();
+                    clearInterval(timer);
+                    showScore(timeLeft);
                 }
 
             });
@@ -149,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function showScore() {
+    function showScore(scoreVal) {
         removeChoices();
         title.classList.remove("d-none");
         title.classList.remove("text-center");
@@ -157,14 +174,77 @@ document.addEventListener("DOMContentLoaded", function () {
         title.classList.add("text-left");
         
         title.textContent = "All done!";
+        
+        // Score
+        finalScore.classList.remove("d-none");
+        finalScore.classList.add("d-block");
+        finalScore.classList.add("text-left");
+        
+        currentScore = scoreVal;
+        score.textContent = currentScore;
 
+        questionContent.classList.add("d-none");
+        
     }
 
-    function updateClock() {
+    function updateClock(){
         clock.textContent = timeLeft;
     };
+    
+
+    function showHighScore(event, scoreVal, playerInit){
+        event.preventDefault();
+
+        // if scoreVal is not null, store the passed value
+        if(scoreVal !== undefined && playerInit!== undefined){
+            var scores = {
+                "init": playerInit,
+                "score": scoreVal,
+            };
+            highScoreBoard.push(scores);
+            localStorage.setItem(highScores,JSON.stringify(highScoreBoard));
+        }
+
+        title.classList.remove("d-none");
+        title.classList.remove("text-center");
+        title.classList.remove("mx-auto");
+        title.classList.add("text-left");
+        
+        title.textContent = "Highscores";
+
+        finalScore.classList.add("d-none");
+        finalScore.classList.remove("d-block");
+
+        questionContent.classList.add("d-none");
+        startQuiz.classList.add("d-none");
+
+        highScoreBoard.forEach(function(scoreItem, index){
+            var scoreListItem = document.createElement("div");
+             scoreListItem.classList.add("bg-info");
+             scoreListItem.classList.add("m-2");
+             scoreListItem.classList.add("p-2");
+             scoreListItem.classList.add("text-white");
+             scoreListItem.classList.add("rounded-pill");
+
+             scoreListItem.innerHTML = "<span class='pr-2'>" + (index+1) + ".</span><span class='pl-2 pr-4'>" + scoreItem.init + "</span><span class='p-4'>-</span><span class='pl-4'>" +scoreItem.score + "</span>";
+
+             highScoreList.appendChild(scoreListItem);
+             
+        });
+        
+    }
 
     startQuiz.addEventListener("click", beginQuiz);
+
+    submitButton.addEventListener("click", function(){
+        showHighScore(event,currentScore, playerInitials.value);
+        currentScore = null;
+        playerInitials.value = null;
+    });
+
+    scoreBoard.addEventListener("click",function(){
+        showHighScore(event);
+    })
 
 
 })
