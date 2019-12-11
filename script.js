@@ -12,7 +12,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var submitButton = document.querySelector("#submitButton");
     var highScoreList = document.querySelector("#highScoreList");
     var playerInitials = document.querySelector("#playerInitials");
-    var scoreBoard = document.querySelector("#scoreBoard");
+    var scoreBoardButton = document.querySelector("#scoreBoardButton");
+    var botButtonMenu = document.querySelector("#botButtonMenu");
     var timer;
     var timeLeft = 0;
     var currentScore = 0;
@@ -38,17 +39,24 @@ document.addEventListener("DOMContentLoaded", function () {
     ];
 
     var highScoreBoard;
-    highScoreBoard = JSON.parse(localStorage.getItem(highScores));
-    if(highScoreBoard === null){highScoreBoard = []};
+
 
 
     var insText = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!"
     questionContent.textContent = insText;
 
 
+    function getHighScoresFromStorage() {
+        highScoreBoard = JSON.parse(localStorage.getItem(highScores));
+        if (highScoreBoard === null) { highScoreBoard = [] };
+    };
+
     function beginQuiz() {
 
         var questionNumber = 0;
+
+        //disable buttons
+        highscoreButtonToggle("deactivate");
 
         title.classList.add("d-none");
         startQuiz.classList.add("d-none");
@@ -89,11 +97,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function showQuestion(index) {
 
-        // destroy the previous questions choices
-        // var choiceBox = document.querySelector("#choices");
-        // if (choiceBox !== null) {
-        //     choiceBox.remove();
-        // }
         removeChoices();
 
         // set the new question
@@ -132,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Decrement time - penalty for wrong answer
 
                     timeLeft = timeLeft - 15;
-                    if(timeLeft < 0 ){ timeLeft = 0};
+                    if (timeLeft < 0) { timeLeft = 0 };
                 }
 
                 // display the message box
@@ -146,12 +149,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     messageBox.classList.remove("d-block");
                 }, 1500);
 
-                if (questions[index+1] !== undefined) {
-                    showQuestion(index+1);
+                if (questions[index + 1] !== undefined) {
+                    showQuestion(index + 1);
                 }
                 else {
                     clearInterval(timer);
                     showScore(timeLeft);
+                    //scoreBoardButton.setAttribute("aria-disabled",false);
+                    highscoreButtonToggle("active");
+
                 }
 
             });
@@ -172,44 +178,49 @@ document.addEventListener("DOMContentLoaded", function () {
         title.classList.remove("text-center");
         title.classList.remove("mx-auto");
         title.classList.add("text-left");
-        
+
         title.textContent = "All done!";
-        
+
         // Score
         finalScore.classList.remove("d-none");
         finalScore.classList.add("d-block");
         finalScore.classList.add("text-left");
-        
+
         currentScore = scoreVal;
         score.textContent = currentScore;
 
         questionContent.classList.add("d-none");
-        
+
     }
 
-    function updateClock(){
+    function updateClock() {
         clock.textContent = timeLeft;
     };
-    
 
-    function showHighScore(event, scoreVal, playerInit){
+
+    function showHighScore(event, scoreVal, playerInit) {
         event.preventDefault();
 
+        // Clear screen to rerender it
+        highScoreList.innerHTML = "";
+        botButtonMenu.innerHTML = "";
+
+
         // if scoreVal is not null, store the passed value
-        if(scoreVal !== undefined && playerInit!== undefined){
+        if (scoreVal !== undefined && playerInit !== undefined) {
             var scores = {
                 "init": playerInit,
                 "score": scoreVal,
             };
             highScoreBoard.push(scores);
-            localStorage.setItem(highScores,JSON.stringify(highScoreBoard));
+            localStorage.setItem(highScores, JSON.stringify(highScoreBoard));
         }
 
         title.classList.remove("d-none");
         title.classList.remove("text-center");
         title.classList.remove("mx-auto");
         title.classList.add("text-left");
-        
+
         title.textContent = "Highscores";
 
         finalScore.classList.add("d-none");
@@ -218,33 +229,81 @@ document.addEventListener("DOMContentLoaded", function () {
         questionContent.classList.add("d-none");
         startQuiz.classList.add("d-none");
 
-        highScoreBoard.forEach(function(scoreItem, index){
+        highScoreBoard.forEach(function (scoreItem, index) {
             var scoreListItem = document.createElement("div");
-             scoreListItem.classList.add("bg-info");
-             scoreListItem.classList.add("m-2");
-             scoreListItem.classList.add("p-2");
-             scoreListItem.classList.add("text-white");
-             scoreListItem.classList.add("rounded-pill");
+            scoreListItem.classList.add("bg-info");
+            scoreListItem.classList.add("my-2");
+            scoreListItem.classList.add("p-2");
+            scoreListItem.classList.add("text-white");
+            scoreListItem.classList.add("rounded-pill");
 
-             scoreListItem.innerHTML = "<span class='pr-2'>" + (index+1) + ".</span><span class='pl-2 pr-4'>" + scoreItem.init + "</span><span class='p-4'>-</span><span class='pl-4'>" +scoreItem.score + "</span>";
+            scoreListItem.innerHTML = "<span class='pr-2'>" + (index + 1) + ".</span><span class='pl-2 pr-4'>" + scoreItem.init + "</span><span class='p-4'>-</span><span class='pl-4'>" + scoreItem.score + "</span>";
 
-             highScoreList.appendChild(scoreListItem);
-             
+            highScoreList.appendChild(scoreListItem);
+
         });
-        
+
+        addButtonToBotMenu("Go Home", "homeButton");
+        addButtonToBotMenu("Clear Highscores", "clearScores");
     }
 
+    function addButtonToBotMenu(butText, butID) {
+        var button = document.createElement("button");
+        button.id = butID;
+        button.classList.add("btn");
+        button.classList.add("btn-primary");
+        button.classList.add("mr-2");
+        button.textContent = butText;
+        botButtonMenu.appendChild(button);
+    }
+
+    function goHome(event) {
+        if (event.target.id == "homeButton") {
+            window.location = "index.html";
+        }
+
+    }
+
+    function clearHighscores(event) {
+        if (event.target.id == "clearScores") {
+            localStorage.removeItem(highScores);
+            getHighScoresFromStorage();
+            showHighScore(event);
+        }
+
+    }
+
+
+    getHighScoresFromStorage();
     startQuiz.addEventListener("click", beginQuiz);
 
-    submitButton.addEventListener("click", function(){
-        showHighScore(event,currentScore, playerInitials.value);
+    submitButton.addEventListener("click", function () {
+        showHighScore(event, currentScore, playerInitials.value);
         currentScore = null;
         playerInitials.value = null;
     });
 
-    scoreBoard.addEventListener("click",function(){
-        showHighScore(event);
-    })
+    function highscoreButtonToggle(state) {
+
+        if (state === "active") {
+            scoreBoardButton.addEventListener("click", function () {
+                showHighScore(event);
+            })
+        }
+        else if (state === "deactivate") {
+            scoreBoardButton.removeEventListener("click", function(){});
+
+        }
+
+    };
+
+    highscoreButtonToggle("active");
+
+
+botButtonMenu.addEventListener("click", goHome);
+botButtonMenu.addEventListener("click", clearHighscores);
+
+
 
 
 })
