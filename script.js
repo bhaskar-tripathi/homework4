@@ -31,11 +31,21 @@ document.addEventListener("DOMContentLoaded", function () {
             choices: ["quotes", "curly brackets", "parentheses", "square brackets"],
             answer: "parentheses"
         },
-        // {
-        //     title: "The condition in an if / else statement is enclosed within ____. , The condition in an if / else statement is enclosed within ____., The condition in an if / else statement is enclosed within ____.",
-        //     choices: ["quotes", "curly brackets", "parentheses", "square brackets"],
-        //     answer: "parentheses"
-        // },
+        {
+            title: "Inside which HTML element do we put the JavaScript?",
+            choices: ["<script>", "<javascript>", "<js>", "<scripting>"],
+            answer: "<script>"
+        },
+        {
+            title: "What is the correct syntax for referring to an external script called 'xxx.js'?",
+            choices: ["<script href='xxx.js'>", "<script name='xxx.js'>", "<script src='xxx.js'>", "<script file='xxx.js'>"],
+            answer: "<script src='xxx.js'>"
+        },
+        {
+            title: "How do you write 'Hello World' in an alert box?",
+            choices: ["msgBox('Hello World');", "alertBox('Hello World');", "msg('Hello World');", "numalert('Hello World');bers"],
+            answer: "alert('Hello World');"
+        },
     ];
 
     var highScoreBoard;
