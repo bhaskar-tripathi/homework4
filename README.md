@@ -13,7 +13,7 @@ The rules of this game are as follows:
 Once all the questions are answered, you are presented with your score. You can enter your name initial and click on "Submit" button to store your score.</p>
 <p> You can view all the high scores buy clicking on the "View Highscores" link at the top left corner side of the menu.</p>
 
-![alt text](https://github.com/bhaskar-tripathi/homework4/blob/master/assets/homeScreen.png)
+![alt text](https://github.com/bhaskar-tripathi/homework4/blob/master/assets/landing%20page.png)
   
 ## Pre-requisite
 <p>None, except that it uses external bootstrap CSS and javascript files. All other files have been placed in the root folder.</p>
