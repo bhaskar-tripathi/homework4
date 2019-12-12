@@ -199,52 +199,58 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     function showHighScore(event, scoreVal, playerInit) {
+
         event.preventDefault();
 
-        // Clear screen to rerender it
-        highScoreList.innerHTML = "";
-        botButtonMenu.innerHTML = "";
+        if (scoreBoardButton.classList.contains("disabled") !== true) {
 
 
-        // if scoreVal is not null, store the passed value
-        if (scoreVal !== undefined && playerInit !== undefined) {
-            var scores = {
-                "init": playerInit,
-                "score": scoreVal,
-            };
-            highScoreBoard.push(scores);
-            localStorage.setItem(highScores, JSON.stringify(highScoreBoard));
+            // Clear screen to rerender it
+            highScoreList.innerHTML = "";
+            botButtonMenu.innerHTML = "";
+
+
+            // if scoreVal is not null, store the passed value
+            if (scoreVal !== undefined && playerInit !== undefined) {
+                var scores = {
+                    "init": playerInit,
+                    "score": scoreVal,
+                };
+                highScoreBoard.push(scores);
+                localStorage.setItem(highScores, JSON.stringify(highScoreBoard));
+            }
+
+            title.classList.remove("d-none");
+            title.classList.remove("text-center");
+            title.classList.remove("mx-auto");
+            title.classList.add("text-left");
+
+            title.textContent = "Highscores";
+
+            finalScore.classList.add("d-none");
+            finalScore.classList.remove("d-block");
+
+            questionContent.classList.add("d-none");
+            startQuiz.classList.add("d-none");
+
+            highScoreBoard.forEach(function (scoreItem, index) {
+                var scoreListItem = document.createElement("div");
+                scoreListItem.classList.add("bg-info");
+                scoreListItem.classList.add("my-2");
+                scoreListItem.classList.add("p-2");
+                scoreListItem.classList.add("text-white");
+                scoreListItem.classList.add("rounded-pill");
+
+                scoreListItem.innerHTML = "<span class='pr-2'>" + (index + 1) + ".</span><span class='pl-2 pr-4'>" + scoreItem.init + "</span><span class='p-4'>-</span><span class='pl-4'>" + scoreItem.score + "</span>";
+
+                highScoreList.appendChild(scoreListItem);
+
+            });
+
+            addButtonToBotMenu("Go Home", "homeButton");
+            addButtonToBotMenu("Clear Highscores", "clearScores");
         }
 
-        title.classList.remove("d-none");
-        title.classList.remove("text-center");
-        title.classList.remove("mx-auto");
-        title.classList.add("text-left");
-
-        title.textContent = "Highscores";
-
-        finalScore.classList.add("d-none");
-        finalScore.classList.remove("d-block");
-
-        questionContent.classList.add("d-none");
-        startQuiz.classList.add("d-none");
-
-        highScoreBoard.forEach(function (scoreItem, index) {
-            var scoreListItem = document.createElement("div");
-            scoreListItem.classList.add("bg-info");
-            scoreListItem.classList.add("my-2");
-            scoreListItem.classList.add("p-2");
-            scoreListItem.classList.add("text-white");
-            scoreListItem.classList.add("rounded-pill");
-
-            scoreListItem.innerHTML = "<span class='pr-2'>" + (index + 1) + ".</span><span class='pl-2 pr-4'>" + scoreItem.init + "</span><span class='p-4'>-</span><span class='pl-4'>" + scoreItem.score + "</span>";
-
-            highScoreList.appendChild(scoreListItem);
-
-        });
-
-        addButtonToBotMenu("Go Home", "homeButton");
-        addButtonToBotMenu("Clear Highscores", "clearScores");
     }
 
     function addButtonToBotMenu(butText, butID) {
@@ -286,13 +292,11 @@ document.addEventListener("DOMContentLoaded", function () {
     function highscoreButtonToggle(state) {
 
         if (state === "active") {
-            scoreBoardButton.addEventListener("click", function () {
-                showHighScore(event);
-            })
+
+            scoreBoardButton.classList.remove("disabled");
         }
         else if (state === "deactivate") {
-            scoreBoardButton.removeEventListener("click", function(){});
-
+            scoreBoardButton.classList.add("disabled");
         }
 
     };
@@ -300,9 +304,11 @@ document.addEventListener("DOMContentLoaded", function () {
     highscoreButtonToggle("active");
 
 
-botButtonMenu.addEventListener("click", goHome);
-botButtonMenu.addEventListener("click", clearHighscores);
-
+    botButtonMenu.addEventListener("click", goHome);
+    botButtonMenu.addEventListener("click", clearHighscores);
+    scoreBoardButton.addEventListener("click", function () {
+        showHighScore(event);
+    })
 
 
 
