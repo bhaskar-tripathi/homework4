@@ -11,7 +11,7 @@ The rules of this game are as follows:
   <li>There is penalty of 10 seconds for every wrong answer</li>
     </ol>
 Once all the questions are answered, you are presented with your score. You can enter your name initial and click on "Submit" button to store your score.</p>
-<p> You can view all the high scores buy clicking on the "View Highscores" link at the top left corner side of the menu.</p>
+<p> You can view all the high scores buy clicking on the "View Highscores" link at the top left corner side of the menu. This link is disabled when the game is play.</p>
 
 ![alt text](https://github.com/bhaskar-tripathi/homework4/blob/master/assets/landing%20page.png)
   
