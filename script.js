@@ -14,6 +14,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var playerInitials = document.querySelector("#playerInitials");
     var scoreBoardButton = document.querySelector("#scoreBoardButton");
     var botButtonMenu = document.querySelector("#botButtonMenu");
+    var progress = document.querySelector(".progress");
+    var progressBar = document.querySelector(".progress-bar");
     var timer;
     var timeLeft = 0;
     var currentScore = 0;
@@ -97,6 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (timeLeft <= 0) {
             clearInterval(timer);
+            progress.classList.add("d-none");
             showScore();
         }
     }
@@ -123,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
             row.classList.add("row");
             row.classList.add("mx-auto");
             row.classList.add("my-2");
-            instruction.appendChild(row);
+            // instruction.appendChild(row);
 
             var choiceButton = document.createElement("button");
             choiceButton.textContent = (++choiceNum) + ". " + choice;
@@ -165,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 else {
                     clearInterval(timer);
                     showScore(timeLeft);
-                    //scoreBoardButton.setAttribute("aria-disabled",false);
+                    progress.classList.add("d-none");
                     highscoreButtonToggle("active");
 
                 }
@@ -205,7 +208,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateClock() {
         clock.textContent = timeLeft;
+        if(progress.classList.contains("d-none") === true ){
+            progress.classList.remove("d-none");
+            
+        }
+        // var quizTime = 
+        setProgressBar(timeLeft,getQuizTime());
+
     };
+
+    function setProgressBar(remaining,total){
+        var barStatus = 100 - (remaining/total*100);
+        var widthStyle = "width: "+ barStatus +"%";
+        progressBar.removeAttribute("style");
+        progressBar.setAttribute("style",widthStyle);
+        if(barStatus <= 25){
+            progressBar.classList.add("bg-success");
+            progressBar.classList.remove("bg-info","bg-warning","bg-danger");
+    }
+        else if(barStatus <= 50){ 
+            progressBar.classList.add("bg-info");
+        progressBar.classList.remove("bg-success","bg-warning","bg-danger");
+     }
+        else if(barStatus <= 75){ 
+            progressBar.classList.add("bg-warning");
+        progressBar.classList.remove("bg-success","bg-info","bg-danger");
+             }
+        else { 
+            progressBar.classList.add("bg-danger");
+        progressBar.classList.remove("bg-success","bg-warning","bg-info");
+         };
+    }
 
 
     function showHighScore(event, scoreVal, playerInit) {
